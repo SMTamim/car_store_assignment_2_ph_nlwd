@@ -1,17 +1,22 @@
-import { Request, Response } from 'express';
+/**
+ * Home Controllers
+ */
 
+import { Request, Response } from 'express';
+import { Helpers } from '../helper';
+
+// default index / route
 const index = (req: Request, res: Response) => {
   try {
-    res.status(200).json({
-      hello: 'world',
+    Helpers.sendSuccessResponse(res, {
       message: 'Car store backend is working!',
     });
-  } catch (e) {
-    res.status(500).json({
-      success: false,
-      message: 'Something went wrong!',
-      error: e,
-    });
+  } catch (error) {
+    if (error instanceof Error) {
+      Helpers.sendErrorResponse(res, error, 'Some error occurred!');
+    } else {
+      Helpers.sendErrorResponse(res);
+    }
   }
 };
 
