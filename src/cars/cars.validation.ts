@@ -1,9 +1,14 @@
 import { z } from 'zod';
 
-// car data validation using zod
+// car update data validation using zod
+export const carUpdateSchema = z.object({
+  price: z.number().min(0),
+  quantity: z.number().min(0),
+});
 
+// car data validation using zod
 export const carValidationSchema = z.object({
-  name: z
+  brand: z
     .string({
       errorMap: () => ({
         message: 'You must provide a brand name for the car',

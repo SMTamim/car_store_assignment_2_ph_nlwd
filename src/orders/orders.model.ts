@@ -6,14 +6,19 @@ export type TOrder = {
   car: ObjectId;
   quantity: number;
   totalPrice: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 // define mongoose schema for Order type
-export const orderSchema = new Schema<TOrder>({
-  email: { type: String, required: true },
-  car: { type: Types.ObjectId, ref: 'Car', required: true }, // references Car model
-  quantity: { type: Number, required: true },
-  totalPrice: { type: Number, required: true },
-});
+export const orderSchema = new Schema<TOrder>(
+  {
+    email: { type: String, required: true },
+    car: { type: Types.ObjectId, ref: 'Car', required: true }, // references Car model
+    quantity: { type: Number, required: true },
+    totalPrice: { type: Number, required: true },
+  },
+  { timestamps: true },
+);
 
 export const Order = model('Order', orderSchema);
