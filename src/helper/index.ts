@@ -1,7 +1,7 @@
 import { Response } from 'express';
 
 // helper method to send generic success response
-const sendSuccessResponse = (res: Response, obj: Object): Response => {
+const sendSuccessResponse = (res: Response, obj: Record<string, unknown>): Response => {
   return res.status(200).json({ success: true, ...obj });
 };
 
