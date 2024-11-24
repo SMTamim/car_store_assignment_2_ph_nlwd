@@ -23,13 +23,13 @@ export const carValidationSchema = z.object({
     })
     .max(50),
   year: z
-    .number()
+    .number({ errorMap: () => ({ message: "You must provide a 'year' field" }) })
     .int()
     .refine((value) => value >= 1000 && value <= 9999, {
       message: "The number must be a valid 'year' (e.g., between 1000 and 9999)",
     }),
   price: z
-    .number({ errorMap: () => ({ message: "'price' must be a number" }) })
+    .number({ errorMap: () => ({ message: "'price' field must be a number" }) })
     .min(0, "'price' must be greater than -1"),
   category: z.enum(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible'], {
     errorMap: () => ({

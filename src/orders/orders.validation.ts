@@ -2,8 +2,10 @@ import { z } from 'zod';
 
 // zod validation for order data
 export const orderValidationSchema = z.object({
-  email: z.string().email(),
-  car: z.string(),
+  email: z
+    .string({ errorMap: () => ({ message: "You must provide an 'email' field" }) })
+    .email("field 'email' must be a valid email"),
+  car: z.string({ errorMap: () => ({ message: "You must provide a 'car' field" }) }),
   quantity: z
     .number({ errorMap: () => ({ message: "'quantity' must be a number" }) })
     .int()
