@@ -12,11 +12,7 @@ const index = (req: Request, res: Response) => {
       message: 'Car store backend is working!',
     });
   } catch (error) {
-    if (error instanceof Error) {
-      Helpers.sendErrorResponse(res, error, 'Some error occurred!');
-    } else {
-      Helpers.sendErrorResponse(res);
-    }
+    Helpers.sendErrorResponse(res, error as Error);
   }
 };
 

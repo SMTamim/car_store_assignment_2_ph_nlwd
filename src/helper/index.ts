@@ -12,7 +12,8 @@ export const sendErrorResponse = (res: Response, error: Error | string, status: 
 
   if (error instanceof Error) {
     errorMessage = error.message || 'An unknown error occurred.';
-    stack = process.env.NODE_ENV === 'development' ? error.stack : undefined;
+    // stack = process.env.NODE_ENV === 'development' ? error.stack : undefined;
+    stack = error.stack;
     if (error.name === 'ZodError') {
       errorMessage = JSON.parse(error.message)[0].message;
     }
