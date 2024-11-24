@@ -31,7 +31,7 @@ const getSingleCarFromDB = async (carId: string) => {
 
 // update a single car using carId
 const updateSpecificCarInDB = async (carId: string, updateData: { price: number; quantity: number }) => {
-  const result = await Car.findByIdAndUpdate(
+  let result = await Car.findByIdAndUpdate(
     carId,
     { $set: updateData },
     {
@@ -39,6 +39,16 @@ const updateSpecificCarInDB = async (carId: string, updateData: { price: number;
       runValidators: true,
     },
   );
+  if (result?.quantity ?? 0 > 0) {
+    result = await Car.findByIdAndUpdate(
+      carId,
+      { $set: { inStock: true } },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+  }
   return result;
 };
 

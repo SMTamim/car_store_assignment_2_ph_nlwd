@@ -1,4 +1,4 @@
-import { Model, Schema, model } from 'mongoose';
+import { Model, Schema, Types, model } from 'mongoose';
 
 // define Car type
 export type TCar = {
@@ -36,36 +36,54 @@ export const carSchema = new Schema<TCar, CarModel>(
   },
   {
     timestamps: true,
-    // toJSON: {
-    //   virtuals: true,
-    //   versionKey: false,
-    //   transform: (doc, ret) => {
-    //     delete ret.isDeleted;
-    //     return ret;
-    //   },
-    // },
-    // toObject: {
-    //   virtuals: true,
-    //   versionKey: false,
-    //   transform: (doc, ret) => {
-    //     delete ret.isDeleted;
-    //     return ret;
-    //   },
-    // },
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        delete ret.isDeleted;
+        return ret;
+      },
+    },
+    toObject: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        delete ret.isDeleted;
+        return ret;
+      },
+    },
   },
 );
 
-// doesCarExists by _id static method
 export interface CarModel extends Model<TCar> {
+  // doesCarExists by _id static method
   isCarExists(id: string): Promise<boolean>;
+  // checkCarQuantity by _id static method
+  getCarQuantity(id: string): Promise<number>;
+  // updateCarQuantity by _id static method
+  updateCarQuantity(id: Types.ObjectId, quantityChange: number): Promise<TCar | null>;
 }
 
+// checks if a car exists on the database
 carSchema.statics.isCarExists = async (id: string): Promise<boolean> => {
   const existingCar = await Car.exists({ _id: id });
   return existingCar ? true : false;
 };
 
-// query middleware
+// returns the car quantity from database
+carSchema.statics.getCarQuantity = async (id: string): Promise<number> => {
+  const car = await Car.findById(id);
+  return car?.quantity ?? 0;
+};
+
+// update the car quantity and set isStock to false if quantity is 0
+carSchema.statics.updateCarQuantity = async (id: Types.ObjectId, quantity: number): Promise<TCar | null> => {
+  const updatedCar = await Car.findByIdAndUpdate(id, { $inc: { quantity: quantity } }, { new: true });
+  if (updatedCar?.quantity === 0) {
+    await Car.findByIdAndUpdate(id, { $set: { inStock: false } });
+  }
+  return updatedCar;
+};
+
+// query middleware/hook to remove the deleted field when updating or finding
 carSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();

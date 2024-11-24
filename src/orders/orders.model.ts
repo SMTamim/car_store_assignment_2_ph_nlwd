@@ -1,9 +1,9 @@
-import { model, ObjectId, Schema, Types } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 
 // define Order type
 export type TOrder = {
   email: string;
-  car: ObjectId;
+  car: Types.ObjectId;
   quantity: number;
   totalPrice: number;
   createdAt?: Date;
@@ -14,7 +14,7 @@ export type TOrder = {
 export const orderSchema = new Schema<TOrder>(
   {
     email: { type: String, required: true },
-    car: { type: Types.ObjectId, ref: 'Car', required: true }, // references Car model
+    car: { type: Schema.Types.ObjectId, ref: 'Car', required: true }, // references Car model
     quantity: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
   },

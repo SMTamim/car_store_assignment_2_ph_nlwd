@@ -14,11 +14,7 @@ const createCar = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    if (e instanceof Error) {
-      Helpers.sendErrorResponse(res, e, 'Validation error!', 422);
-    } else {
-      Helpers.sendErrorResponse(res);
-    }
+    Helpers.sendErrorResponse(res, e as Error, 422);
   }
 };
 
@@ -33,7 +29,6 @@ const getAllCars = async (req: Request, res: Response) => {
         Helpers.sendErrorResponse(
           res,
           new Error("Search term must be on of the followings 'brand', 'model' or 'category'!"),
-          'Invalid  search term',
           422,
         );
         return;
@@ -49,11 +44,7 @@ const getAllCars = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    if (e instanceof Error) {
-      Helpers.sendErrorResponse(res, e, 'Failed to retrieve cars!');
-    } else {
-      Helpers.sendErrorResponse(res);
-    }
+    Helpers.sendErrorResponse(res, e as Error);
   }
 };
 
@@ -66,7 +57,7 @@ const getSpecificCar = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: 'Car not found!',
-        data: null,
+        data: {},
       });
       return;
     }
@@ -76,11 +67,7 @@ const getSpecificCar = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    if (e instanceof Error) {
-      Helpers.sendErrorResponse(res, e, 'Failed to get car!');
-    } else {
-      Helpers.sendErrorResponse(res);
-    }
+    Helpers.sendErrorResponse(res, e as Error, 422);
   }
 };
 
@@ -93,7 +80,7 @@ const updateSpecificCar = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: 'Car to update was not found!',
-        data: null,
+        data: {},
       });
       return;
     }
@@ -105,11 +92,7 @@ const updateSpecificCar = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    if (e instanceof Error) {
-      Helpers.sendErrorResponse(res, e, 'Failed to update car!');
-    } else {
-      Helpers.sendErrorResponse(res);
-    }
+    Helpers.sendErrorResponse(res, e as Error);
   }
 };
 
@@ -122,21 +105,17 @@ const deleteSpecificCar = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: 'Car to delete was not found!',
-        data: null,
+        data: {},
       });
       return;
     }
     await CarsServices.deleteSpecificCarFromDB(carId);
     Helpers.sendSuccessResponse(res, {
       message: 'Car deleted successfully',
-      data: null,
+      data: {},
     });
   } catch (e) {
-    if (e instanceof Error) {
-      Helpers.sendErrorResponse(res, e, 'Failed to delete the car!');
-    } else {
-      Helpers.sendErrorResponse(res);
-    }
+    Helpers.sendErrorResponse(res, e as Error);
   }
 };
 
